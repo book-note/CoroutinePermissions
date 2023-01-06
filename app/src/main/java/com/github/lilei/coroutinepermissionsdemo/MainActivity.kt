@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github.lilei.coroutinepermissions.InlineRequestPermissionException
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                requestPermissionsForResult(*permsSd, rationale = "为了更好的提供服务，需要获取存储空间权限")
+                requestPermissionsForResult(*permsSd)
             } catch (e: Exception) {
             }
         }
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         sdBtn.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 try {
-                    requestPermissionsForResult(*permsSd, rationale = "为了更好的提供服务，需要获取存储空间权限")
+                    requestPermissionsForResult(*permsSd)
                     startActivity(Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI))
                 } catch (e: InlineRequestPermissionException) {
                     Toast.makeText(this@MainActivity, "失败", Toast.LENGTH_SHORT).show()
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         picBtn.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 try {
-                    requestPermissionsForResult(*permsPic, rationale = "为了更好的提供服务，需要获取拍照权限")
+                    requestPermissionsForResult(*permsPic)
                     startActivity(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
                 } catch (e: InlineRequestPermissionException) {
                     Toast.makeText(this@MainActivity, "失败", Toast.LENGTH_SHORT).show()
@@ -56,6 +57,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-
 }

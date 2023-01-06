@@ -43,39 +43,30 @@ class InlinePermissionResult {
     }
 
     constructor(fragment: Fragment) {
-        var activity: FragmentActivity? = null
-        fragment?.let {
-            activity = fragment.activity
-        }
-        activityReference = WeakReference(activity)
+        activityReference = WeakReference(fragment.requireActivity())
     }
 
     fun onSuccess(callback: SuccessCallback): InlinePermissionResult {
-        callback?.let {
-            successCallbacks.add(it)
-        }
+        successCallbacks.add(callback)
         return this
     }
 
     fun onFail(callback: FailCallback): InlinePermissionResult {
-        callback?.let {
-            failCallbacks.add(it)
-        }
+        failCallbacks.add(callback)
         return this
     }
 
-    fun requestPermissions(vararg permissions: String, title: String = "", rationale: String) {
+    fun requestPermissions(vararg permissions: String) {
         val activity = activityReference.get()
         if (activity == null || activity.isFinishing) return
 
-        val oldFragment: RequestPermissionFragment? =
+        val oldFragment =
             activity.supportFragmentManager.findFragmentByTag(TAG) as RequestPermissionFragment?
         if (oldFragment != null) {
             oldFragment.setListener(listener)
+            oldFragment.request()
         } else {
             val newFragment = RequestPermissionFragment.newInstance(
-                title = title,
-                rationale = rationale,
                 permissions = *permissions
             )
             newFragment.setListener(listener)
@@ -86,6 +77,5 @@ class InlinePermissionResult {
                     .commitNowAllowingStateLoss()
             }
         }
-
     }
 }

@@ -9,9 +9,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 suspend fun FragmentActivity.requestPermissionsForResult(
-    vararg permissions: String,
-    title: String = "权限请求",
-    rationale: String
+    vararg permissions: String
 ): Boolean =
     suspendCoroutine {
         InlinePermissionResult(this)
@@ -25,13 +23,11 @@ suspend fun FragmentActivity.requestPermissionsForResult(
                     it.resumeWithException(InlineRequestPermissionException())
                 }
             })
-            .requestPermissions(title = title, rationale = rationale, permissions = *permissions)
+            .requestPermissions(permissions = *permissions)
     }
 
 suspend fun Fragment.requestPermissionsForResult(
-    vararg permissions: String,
-    title: String = "权限请求",
-    rationale: String
+    vararg permissions: String
 ): Boolean =
     suspendCoroutine {
         InlinePermissionResult(this)
@@ -45,5 +41,5 @@ suspend fun Fragment.requestPermissionsForResult(
                     it.resumeWithException(InlineRequestPermissionException())
                 }
             })
-            .requestPermissions(title = title, rationale = rationale, permissions = *permissions)
+            .requestPermissions(permissions = *permissions)
     }
